@@ -4,26 +4,35 @@ import java.net.*;
 
 public class TCPClient {
     public static final int PORT = 15260;
-    public static final String HOST = "127.0.0.1";
+    private boolean isRunning = true;
 
-    public void start(){
-        try(Socket socket = new Socket(HOST, PORT)){
-            OutputStream outputStream = socket.getOutputStream();
-            InputStream inputStream = socket.getInputStream();
-            String message = "Hello world";
-            outputStream.write(message.getBytes());
-            socket.shutdownOutput();
-            StringBuilder messageBuilder = new StringBuilder();
-            byte[] buf = new byte[256];
-            int var;
-            while((var = inputStream.read(buf)) > -1){
-                messageBuilder.append(new String(buf, 0, var));
+    public void run (String address) {
+        System.out.println("(NOTE: message STOP will stop the client and the server)");
+        while (isRunning) {
+            try (Socket socket = new Socket(address, PORT)) {
+                OutputStream outputStream = socket.getOutputStream();
+                InputStream inputStream = socket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+                System.out.println("Input your message:");
+                String message = reader.readLine();
+                outputStream.write(message.getBytes());
+                socket.shutdownOutput();
+                StringBuilder messageBuilder = new StringBuilder();
+                byte[] buffer = new byte[256];
+                int length;
+                while((length = inputStream.read(buffer)) > -1) {
+                    messageBuilder.append(new String(buffer, 0, length));
+                }
+                if (message.equals("STOP")) {
+                    isRunning = false;
+                }
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+            } catch (IOException e) {
+                System.out.println("TCPClient Error: " + e.getMessage());
+                isRunning = false;
             }
-            System.out.println(messageBuilder);
-            outputStream.close();
-            inputStream.close();
-        } catch (IOException e){
-            System.out.println("TCPClient Error: " + e.getMessage());
         }
     }
 }
