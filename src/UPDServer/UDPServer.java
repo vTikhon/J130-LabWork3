@@ -8,7 +8,7 @@ public class UDPServer {
     static final int DATA_LENGTH = 64;
     private boolean isRun = true;
 
-    public void run () {
+    public void run() {
         try (DatagramSocket datagramSocket = new DatagramSocket(PORT)){
             DatagramPacket datagramPacket = new DatagramPacket(new byte[DATA_LENGTH], DATA_LENGTH);
             while (isRun) {
@@ -17,7 +17,7 @@ public class UDPServer {
                 if (message.equals("STOP")) {
                     isRun = false;
                 } else {
-                    System.out.println("[" + new Date() + "]" + datagramPacket.getAddress().getHostAddress() + ": " + message);
+                    System.out.println("[" + new Date() + "] " + datagramPacket.getAddress().getHostAddress() + ": " + message);
                 }
             }
         } catch (IOException e) {
