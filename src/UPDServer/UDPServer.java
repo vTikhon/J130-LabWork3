@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class UDPServer {
     static final int PORT = 15250;
-    static final int DATA_LENGTH = 64;
+    static final int DATA_LENGTH = 1024;
     private boolean isRunning = true;
 
     public void run() {

@@ -1,6 +1,7 @@
 package TCPClient;
 import java.io.*;
 import java.net.*;
+import java.util.Date;
 
 public class TCPClient {
     public static final int PORT = 15260;
@@ -16,16 +17,20 @@ public class TCPClient {
                 System.out.println("Input your message:");
                 String message = reader.readLine();
                 outputStream.write(message.getBytes());
-                socket.shutdownOutput();
-                StringBuilder messageBuilder = new StringBuilder();
-                byte[] buffer = new byte[256];
-                int length;
-                while((length = inputStream.read(buffer)) > -1) {
-                    messageBuilder.append(new String(buffer, 0, length));
-                }
                 if (message.equals("STOP")) {
                     isRunning = false;
                 }
+                socket.shutdownOutput();
+
+                //формируем ответ от сервера (в виде времени согласно заданию)
+                StringBuilder messageBuilder = new StringBuilder();
+                byte[] buffer = new byte[256];
+                int length;
+                while ((length = inputStream.read(buffer)) > -1) {
+                    messageBuilder.append(new String(buffer, 0, length));
+                }
+                System.out.println("Server received your message at: " + messageBuilder);
+
                 outputStream.flush();
                 outputStream.close();
                 inputStream.close();

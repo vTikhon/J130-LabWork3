@@ -24,7 +24,7 @@ public class TCPServer {
                 } else {
                     String message = "[" + new Date() + "] " + socket.getInetAddress().getHostAddress() + ": " + messageBuilder;
                     System.out.println(message);
-                    outputStream.write(message.getBytes());
+                    outputStream.write(new Date().toString().getBytes()); //Отправляем дату получения сообщения обратно клиенту
                 }
                 outputStream.flush();
                 inputStream.close();
